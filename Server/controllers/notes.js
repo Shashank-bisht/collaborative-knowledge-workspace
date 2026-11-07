@@ -682,3 +682,82 @@ export const deleteNoteComment = (req, res) => {
     )
   })
 }
+
+export const emptyTrash = (req, res) => {
+  const token = req.cookies.access_token
+  if (!token) return res.status(401).json('Not authenticated!')
+
+  jwt.verify(token, JWT_SECRET, (err, userInfo) => {
+    if (err) return res.status(403).json('Token is not valid!')
+
+    const workspaceId = req.query.workspace_id || null
+
+    const baseQuery = `
+      SELECT n.note_id, n.content, n.user_id, n.workspace_id, COALESCE(wm.role, 'owner') AS workspace_role
+      FROM notes n
+      LEFT JOIN workspace_members wm
+        ON wm.workspace_id = n.workspace_id AND wm.user_id = ?
+      WHERE n.deleted = 1 AND (
+        n.user_id = ? OR EXISTS (
+          SELECT 1 FROM workspace_members wm2
+          WHERE wm2.workspace_id = n.workspace_id AND wm2.user_id = ?
+        )
+      )
+    `
+
+    const params = [userInfo.user_id, userInfo.user_id, userInfo.user_id]
+    const finalQuery = workspaceId ? `${baseQuery} AND n.workspace_id = ?` : baseQuery
+    if (workspaceId) params.push(workspaceId)
+
+    db.query(finalQuery, params, (fetchErr, rows) => {
+      if (fetchErr) {
+        console.error(fetchErr)
+        return res.status(500).json('Unable to load trash items.')
+      }
+
+      if (!rows || rows.length === 0) {
+        return res.status(200).json({ deleted: 0, message: 'Trash is already empty.' })
+      }
+
+      const deletableIds = rows
+        .filter((note) => {
+          if (!note.workspace_id) return note.user_id === userInfo.user_id
+          const isOwner = note.user_id === userInfo.user_id
+          const role = note.workspace_role || 'owner'
+          if (isOwner) return true
+          return !['viewer'].includes(role)
+        })
+        .map((note) => note.note_id)
+
+      if (deletableIds.length === 0) {
+        return res.status(403).json('You do not have permission to clear trash in this workspace.')
+      }
+
+      const placeholder = deletableIds.map(() => '?').join(', ')
+      const deleteQuery = `DELETE FROM notes WHERE note_id IN (${placeholder})`
+
+      db.query(deleteQuery, deletableIds, (deleteErr, result) => {
+        if (deleteErr) {
+          console.error(deleteErr)
+          return res.status(500).json('Unable to clear trash.')
+        }
+
+        deletableIds.forEach((noteId) => {
+          const note = rows.find((row) => row.note_id === noteId)
+          if (note?.content) {
+            try {
+              checkAndDeleteImg(note.content, '')
+            } catch (imageError) {
+              console.error(imageError)
+            }
+          }
+        })
+
+        return res.status(200).json({
+          deleted: result?.affectedRows || 0,
+          message: 'Trash cleared successfully.',
+        })
+      })
+    })
+  })
+}

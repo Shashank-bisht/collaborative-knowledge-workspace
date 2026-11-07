@@ -1,172 +1,213 @@
 # Writer
 
-Writer is a collaborative knowledge workspace and note-taking application inspired by Notion. It allows users to create workspaces, organize notes in folders, collaborate with teammates, assign access roles, share notes, track who is viewing or editing a file, and discuss ideas through nested threaded replies.
+Writer is a collaborative knowledge workspace and note-taking application built for teams, students, and individuals who need to organize notes, manage documents inside workspaces, and collaborate in a structured environment. The project is designed around real-world team workflows similar to Notion and Confluence, but adapted for a full-stack final-year MCA project.
 
-The project is designed for real-time collaborative knowledge management, where users can work together inside shared workspaces without exposing data to everyone blindly. Every note and folder can be managed under a workspace, and users can be assigned roles such as owner, admin, editor, or viewer.
+It combines:
+- personal note management
+- workspace-based collaboration
+- folder organization
+- member role management
+- shared note access
+- live presence tracking
+- note discussions with threaded replies
+- global search and filters
+- trash, archive, favorites, and pagination support
 
-## Project Overview
+---
 
-The application is divided into two major parts:
+## Project Objective
 
-- `Client/` — React frontend for the user interface
-- `Server/` — Express + MySQL backend for APIs, authentication, and data storage
+The goal of Writer is to create a modern collaborative documentation platform where users can:
 
-Writer combines personal note management with team collaboration features, making it suitable for:
+- create and manage workspaces
+- organize files and notes inside folders
+- collaborate with teammates inside a shared workspace
+- assign different roles like owner, admin, editor, and viewer
+- share notes with controlled access
+- see who is viewing or editing a file
+- leave feedback using threaded comments and replies
+- quickly search notes and files across the workspace
 
-- individual note organization
-- project knowledge management
-- collaborative documentation
-- shared workspace notes and discussions
-- internal team knowledge bases
+This makes Writer useful for:
+- personal knowledge management
+- team documentation
+- project notes and task tracking
+- shared study material
+- internal workspace collaboration
 
-## Core Features
+---
 
-### 1. User Authentication
-The system supports:
+## Current Application Features
 
+### 1. Authentication and User Management
+The application supports:
 - user registration
 - login
-- session verification
 - logout
-- protected routes using JWT cookies
+- session verification through JWT cookies
+- protected routes for authenticated users
 
-This ensures that only authenticated users can access their data and collaborative workspace content.
+This ensures that only valid users can access workspace content and personal notes.
 
-### 2. Workspaces
-Users can create workspaces to organize their notes and collaboration groups.
+### 2. Workspace-Based Collaboration
+Users can create workspaces and manage their own collaborative environment.
 
-Each workspace includes:
+Each workspace supports:
+- workspace creation and deletion by the owner
+- invitation of members
+- role-based access control
+- workspace-specific note and folder visibility
+- member management UI
 
-- workspace name and description
-- owner and admins
-- member invitations
-- role-based permissions
-- workspace-specific folder and note access
+### 3. Role Enforcement
+Roles are enforced across the app to prevent misuse of access.
 
-A workspace acts as the main collaboration boundary for notes and folders.
-
-### 3. Workspace Members and Roles
-The app supports role-based access control inside workspaces.
-
-Roles include:
-
+Supported roles:
 - owner
 - admin
 - editor
 - viewer
 
-Permissions are enforced for:
-
-- creating notes and folders
-- editing workspace content
-- deleting workspace items
-- sharing notes
-- inviting and managing members
-
-This prevents unauthorized access and ensures controlled collaboration.
+Examples of enforcement:
+- viewers cannot edit or create notes
+- workspace owner has exclusive control over workspace deletion
+- editors can update content, but cannot change the entire workspace permissions structure
+- workspace members only see content they are allowed to access
 
 ### 4. Folder and Note Management
-Users can create and manage:
+The app supports:
+- creating folders inside workspaces
+- creating notes inside folders
+- renaming and organizing notes
+- favorites
+- archive state
+- trash state
+- soft delete and recovery of deleted notes
 
-- folders inside workspaces
-- notes inside folders
-- favorite notes
-- archived notes
-- deleted notes
-- note titles and content updates
+Notes are stored with metadata such as:
+- title
+- content
+- version number
+- created date
+- folder association
+- workspace association
+- user ownership
+- deleted/archive/favorite flags
 
-Each note belongs to a workspace and a user, and each folder is associated with a user and workspace.
+### 5. Shared Notes
+Users can share notes and assign collaboration roles.
 
-### 5. Shared Notes and Collaborators
-Users can share notes with others and assign access roles.
+Current behavior includes:
+- note sharing for selected users
+- collaborator list management
+- viewer/editor role assignment for shared files
+- shared note visibility in the user’s shared workspace section
 
-Supported sharing roles:
-
-- viewer
-- editor
-
-Shared notes appear in the collaborator’s shared section and can be opened with the correct permission profile.
-
-### 6. Bookmarks
-Users can bookmark shared notes to quickly access important files.
-
-This provides a lightweight method for pinning useful resources without moving them between folders.
-
-### 7. Live Presence Tracking
-The app shows who is currently:
-
+### 6. Live Presence Tracking
+Writer includes presence visibility so users can see whether someone is:
 - viewing a note
 - editing a note
-- active in a workspace
+- active within a workspace
 
-This makes collaboration more visible and helps users understand whether a file is being worked on by someone else.
+This improves collaboration by making shared workflows feel live and transparent.
 
-### 8. Threaded Replies and Discussions
-Each note supports threaded discussion comments.
+### 7. Threaded Commenting System
+Users can discuss notes with nested replies.
 
 Features include:
+- comments on notes
+- threaded replies
+- indentation for nested replies
+- reply counts
+- edit/delete for user-owned comments
+- workspace-safe access checks for comments
 
-- posting comments on notes
-- replying to an existing comment
-- nested indentation for reply hierarchy
-- reply count badges
-- commenting by individual users
-- edit/delete permissions for user-owned comments
+### 8. Search and Filtering
+The app includes a global search experience for faster navigation.
 
-This feature supports collaborative feedback without turning the system into a general chat app.
+Users can search across:
+- notes
+- folders
+- workspaces
+- titles and content-related search terms
 
-### 9. Responsive UI
-The frontend is built using React and Tailwind CSS and supports:
+Filters allow users to narrow the search to relevant content without manually scanning large lists.
 
-- desktop-friendly workspace layouts
-- responsive note editor UI
-- sidebar navigation
-- share and member management screens
-- folder and note management flows
+### 9. Pagination and UX Improvements
+To avoid large, difficult lists, the app includes pagination for note and folder items.
+
+Current behavior:
+- only 10 items are shown per page
+- next/previous controls are available
+- lists remain manageable even with larger workspace data
+
+### 10. Trash Management
+The trash section includes:
+- restoring deleted notes
+- permanent deletion of individual notes
+- bulk removal of all notes in trash
+
+This keeps the app practical and avoids repeated manual deletions.
+
+---
 
 ## Tech Stack
 
 ### Frontend
-
 - React
-- React Router
+- React Router DOM
 - Tailwind CSS
-- Tiptap editor
-- Radix UI components
+- Framer Motion
+- Radix UI
 - Axios
-- Zustand
-- React Responsive
-- Lucide Icons
 - React Icons
+- React Responsive
+- Tiptap Editor
 
 ### Backend
-
 - Node.js
 - Express.js
 - MySQL
 - JWT authentication
 - bcryptjs
-- multer
+- MySQL2
 - dotenv
-- mysql2
+- multer
+
+---
 
 ## Project Architecture
 
-The application follows a client-server architecture:
+The project is split into two main parts:
 
-- the frontend sends requests to the backend through API calls
-- the backend validates user identity and permissions
-- MySQL stores system data such as users, workspaces, folders, notes, shares, and comments
-- the frontend renders dynamic screens using state and API responses
+- `Client/` — React frontend for the UI
+- `Server/` — Express + MySQL backend for business logic and APIs
 
-The architecture supports modular development:
+### Frontend Responsibilities
+The frontend handles:
+- login/register UI
+- workspace switching
+- sidebar navigation
+- folder management UI
+- note editor interface
+- note list rendering
+- trash/archive/favorites views
+- search and filters
+- collaborator presence indicators
+- comments and replies
 
-- `Client/src/api` handles API communication
-- `Client/src/components` contains all reusable UI components
-- `Client/src/pages` contains routes and page screens
-- `Server/controllers` contains business logic
-- `Server/routes` contains API endpoints
-- `Server/db.js` initializes database tables
+### Backend Responsibilities
+The backend handles:
+- authentication and authorization
+- database operations
+- workspace and member permissions
+- note CRUD operations
+- folder and share logic
+- comment management
+- permission enforcement for shared content
+- live presence tracking
+
+---
 
 ## Folder Structure
 
@@ -177,11 +218,12 @@ Writer-main/
 │   ├── public/
 │   └── src/
 │       ├── api/
-│       ├── application.js
 │       ├── components/
 │       ├── layouts/
 │       ├── lib/
 │       ├── pages/
+│       ├── application.js
+│       ├── index.js
 │       └── styles/
 │
 ├── Server/
@@ -201,147 +243,24 @@ Writer-main/
 └── .env.example
 ```
 
-## Main Modules
-
-### Authentication Module
-Responsible for:
-
-- user registration
-- login validation
-- cookie-based JWT session management
-- access verification on protected endpoints
-
-Files involved:
-
-- `Server/controllers/auth.js`
-- `Server/routes/auth.js`
-
-### Workspace Module
-Responsible for:
-
-- creating and deleting workspaces
-- managing members
-- assigning roles
-- workspace-level visibility and access rules
-
-Files involved:
-
-- `Server/controllers/workspace.js` (if used in the project structure)
-- `Server/routes/workspaces.js`
-- `Client/src/components/sidebar/workspaceMembers.js`
-
-### Folder Module
-Responsible for:
-
-- creating folders
-- viewing folder contents
-- moving notes into folders
-- updating folder names
-
-Files involved:
-
-- `Server/controllers/folder.js`
-- `Server/routes/folders.js`
-
-### Note Module
-Responsible for:
-
-- note creation
-- content saving
-- version tracking
-- archive/favorite/delete states
-- note-level permission enforcement
-- live presence tracking
-
-Files involved:
-
-- `Server/controllers/notes.js`
-- `Server/routes/notes.js`
-
-### Share Module
-Responsible for:
-
-- sharing notes with other users
-- assigning viewer/editor roles
-- managing collaborator list
-- handling shared note access
-
-Files involved:
-
-- `Server/controllers/shares.js`
-- `Server/routes/share.js`
-
-### Bookmark Module
-Responsible for:
-
-- bookmark creation
-- deletion of bookmarks
-- retrieving bookmarked content
-
-Files involved:
-
-- `Server/controllers/bookmarks.js`
-- `Server/routes/bookmark.js`
-
-### Comment Module
-Responsible for:
-
-- creating comments on notes
-- creating replies to existing comments
-- nested reply rendering
-- count-based thread summary
-- edit and delete operations by owner
-
-Files involved:
-
-- `Server/controllers/notes.js`
-- `Server/routes/notes.js`
-- `Client/src/components/noteEditor/index.js`
+---
 
 ## Database Design
 
-The backend uses MySQL and initializes tables automatically in `Server/db.js`.
+The app uses MySQL and initializes the necessary tables in `Server/db.js`.
 
-### Main database tables
+### Main Tables
 
 #### `users`
-Stores user account data:
-
+Stores basic login and user profile information:
 - `user_id`
 - `username`
 - `email`
 - `password`
 - `created_date`
 
-#### `folders`
-Stores folder metadata:
-
-- `folder_id`
-- `name`
-- `created_date`
-- `user_id`
-- `workspace_id`
-
-#### `notes`
-Stores note content and metadata:
-
-- `note_id`
-- `name`
-- `content`
-- `version`
-- `created_date`
-- `deleted`
-- `favorite`
-- `archive`
-- `folder_id`
-- `user_id`
-- `workspace_id`
-
-The `version` field protects against concurrent edit conflicts.
-
 #### `workspaces`
-Stores workspace-level information:
-
+Stores collaborative spaces:
 - `workspace_id`
 - `name`
 - `description`
@@ -349,38 +268,55 @@ Stores workspace-level information:
 - `created_at`
 
 #### `workspace_members`
-Stores workspace access and roles:
-
+Stores membership and roles for each workspace:
 - `workspace_id`
 - `user_id`
 - `role`
 - `joined_at`
 
-#### `shares`
-Stores note-sharing links:
+#### `folders`
+Stores folder metadata and workspace association:
+- `folder_id`
+- `name`
+- `user_id`
+- `workspace_id`
+- `created_date`
 
+#### `notes`
+Stores note content and metadata:
+- `note_id`
+- `name`
+- `content`
+- `version`
+- `created_date`
+- `deleted`
+- `archive`
+- `favorite`
+- `folder_id`
+- `user_id`
+- `workspace_id`
+
+#### `shares`
+Stores note-sharing information:
 - `share_id`
 - `note_id`
 - `user_id`
 
 #### `note_collaborators`
-Stores collaborators and their roles for a shared note:
-
+Stores share access for collaborators:
 - `share_id`
 - `user_id`
 - `role`
 - `created_at`
 
 #### `bookmarks`
-Stores user bookmarks:
-
+Stores bookmarked notes or shared content:
 - `bookmark_id`
 - `share_id`
 - `user_id`
 
 #### `comments`
-Stores note discussion threads:
-
+Stores discussion threads for notes:
 - `comment_id`
 - `note_id`
 - `user_id`
@@ -388,166 +324,226 @@ Stores note discussion threads:
 - `message`
 - `created_at`
 
-## System Workflow
+---
 
-### Standard user workflow
+## Core Modules
 
-1. User registers and logs in.
-2. User creates a workspace.
-3. User adds members to the workspace with specific roles.
-4. User creates a folder under the workspace.
-5. User creates notes inside folders.
-6. User can share notes with other users.
-7. Collaborators access notes according to permission rules.
-8. Collaborators can view, edit, or only read depending on assigned role.
-9. Users perform threaded discussions on note content.
-10. Users can bookmark important shared notes for quick access.
+### Authentication Module
+Handles:
+- register
+- login
+- logout
+- JWT verification
+- protected access routes
 
-## Frontend Highlights
+### Workspace Module
+Handles:
+- workspace creation
+- workspace deletion by owner
+- member addition/removal
+- role assignment
+- workspace access control
 
-`Client/src/api/fetch.js` is the main API bridge between the frontend and backend. It provides helper methods for:
+### Folder Module
+Handles:
+- folder creation
+- folder listing
+- folder-level organization
+- note-to-folder assignment
 
-- notes
-- folders
-- shares
-- bookmarks
-- presence tracking
-- comments
-- authentication
+### Note Module
+Handles:
+- note creation
+- note updating
+- note deletion and trash state
+- archive/favorite behavior
+- version control
+- permission checks
+- live presence syncing
+- threaded comments
 
-The UI is structured around:
+### Share Module
+Handles:
+- sharing notes
+- collaborator roles
+- note visibility access
 
-- sidebar navigation
-- note editor
-- folder panel
-- bookmark section
-- share section
-- membership management UI
-- collaboration status indicators
+### Bookmark Module
+Handles:
+- bookmarking important shared content
+- fetching bookmarks
+- removing bookmarks
 
-## Backend Highlights
+---
 
-`Server/index.js` is the main server entry point and handles:
+## User Workflow
 
-- environment setup
-- CORS configuration
-- route mounting
-- JSON parsing
-- file upload handling
-- production static file serving
+A typical user flow in Writer is:
 
-`Server/db.js` initializes the database and ensures tables exist before runtime use.
+1. Register and log in.
+2. Create a workspace.
+3. Invite members and assign roles.
+4. Create folders for organization.
+5. Add notes inside folders.
+6. Share notes with collaborators.
+7. Edit or view based on permission.
+8. Track presence and discussion activity.
+9. Use global search to find content quickly.
+10. Restore or permanently delete notes from trash when needed.
+
+---
 
 ## Setup Instructions
 
-### 1. Clone the project
+### 1. Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd Writer-main
 ```
 
-### 2. Install server dependencies
+### 2. Install Server Dependencies
 
 ```bash
 cd Server
 npm install
 ```
 
-### 3. Install client dependencies
+### 3. Install Client Dependencies
 
 ```bash
 cd ../Client
 npm install
 ```
 
-### 4. Configure environment variables
-Create a `.env` file in the `Server` folder with the required database information:
+### 4. Configure Environment Variables
+Create a `.env` file inside the `Server/` folder with your database settings.
+
+Example:
 
 ```env
 DB_HOST=localhost
 DB_USER=root
 DB_KEY=your_password
 DB_NAME=writer_db
+JWT_SECRET=your_secret_key
 ```
 
-### 5. Start backend
+### 5. Start the Backend
 
 ```bash
 cd Server
 npm start
 ```
 
-### 6. Start frontend
+### 6. Start the Frontend
 
 ```bash
 cd Client
 npm start
 ```
 
-Then open the client in the browser and use the application.
+Then open the app in the browser and start using the application.
 
-## Production Notes
+---
 
-The React frontend can also be built for production:
+## Production Build
+
+To create a production build for the client:
 
 ```bash
 cd Client
 npm run build
 ```
 
-The built output can be served from the backend or deployed to a hosting platform.
+---
 
-## Key Benefits of the Project
+## Notes for Developers
 
-- collaborative workspace model
-- secure role-based access control
-- user-friendly note organization
-- real-time collaboration awareness
-- structured knowledge sharing
-- comment-based discussion support
-- scalable backend architecture
+The app is designed for a clean frontend/backend separation.
 
-## Challenges Solved
+Key frontend files:
+- `Client/src/api/fetch.js` — API layer
+- `Client/src/api/useGlobalContext.js` — global app state
+- `Client/src/components/noteList.js` — paginated note listing
+- `Client/src/components/sidebar/searchNote.js` — search and filtering UI
+- `Client/src/components/trash/trashMenu.js` — trash restore and bulk clear actions
 
-This project addresses common issues in personal note systems:
+Key backend files:
+- `Server/db.js` — MySQL initialization and schema setup
+- `Server/index.js` — server bootstrap and route registration
+- `Server/controllers/notes.js` — notes, comments, presence, and permission logic
+- `Server/controllers/folder.js` — folder and workspace-related business logic
+- `Server/routes/notes.js` — note API routes
 
-- no centralized collaboration layer
-- no role-based access enforcement
-- no way to track active collaborators
-- no discussion system for notes
-- lack of workspace-based organization
+---
 
-Writer solves these by combining note organization, collaboration, and team knowledge management into one system.
+## Advantages of This Project
 
-## Future Enhancements
+- strong full-stack architecture
+- team collaboration logic
+- real-world note management workflow
+- secure role-based access
+- modern UI design
+- practical workspace-based product model
+- strong final-year MCA / BCA / engineering project fit
 
-The project can be extended with:
+---
 
-- notification system for replies and mentions
-- advanced search and tagging
-- version restore/history
-- export to PDF or Markdown
-- AI-powered note summary
-- activity feed and admin analytics
-- drag-and-drop folder organization
-- richer team dashboard statistics
+## Challenges Addressed
 
-## Conclusion
+Writer solves common limitations of a basic note app:
+- lack of workspace-level organization
+- no role-based permissions
+- no team collaboration model
+- no visible presence tracking
+- no threaded discussion feature
+- poor search experience
+- difficult note management during large data growth
 
-Writer is a collaborative knowledge workspace that goes beyond a basic note-taking app. It bridges personal productivity with team-based knowledge sharing, enabling users to organize ideas, assign permissions, collaborate in real time, and discuss updates within notes.
+---
 
-The project demonstrates strong full-stack development concepts, including authentication, database design, role-based access control, API design, UI development, and collaborative feature engineering. It is suitable as a final-year project in software engineering, computer applications, or information technology.
+## Future Improvements
+
+Potential enhancements for future versions:
+- notifications for mentions and replies
+- activity feed and audit logs
+- advanced search ranking and filters
+- PDF/Markdown export
+- AI-powered summaries
+- drag-and-drop file organization
+- dashboard analytics for team activity
+- version history restore for notes
+
+---
 
 ## Summary
 
-Writer is a full-stack collaborative note management system that focuses on:
-
+Writer is a modern collaborative knowledge workspace that goes beyond simple note-taking. It brings together:
 - workspaces
-- folders and notes
-- user roles and permissions
-- collaboration and sharing
-- live presence awareness
-- nested note discussions
+- folders
+- notes
+- collaboration
+- permissions
+- presence tracking
+- discussion threads
+- search
+- pagination
+- trash management
 
-This makes it a practical and modern solution for digital knowledge management.
+This makes it a practical and professional full-stack project suitable for academic and real-world demonstrations.
+
+---
+
+## Final Note
+
+This project is structured to be easily understandable, extensible, and demo-friendly. It demonstrates important engineering concepts including:
+- authentication
+- database modeling
+- REST API design
+- role-based authorization
+- frontend state management
+- real-time collaboration awareness
+- modern web application UX
+
+

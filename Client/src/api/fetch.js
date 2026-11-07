@@ -299,3 +299,10 @@ export const xDeleteWorkspace = async (workspaceId) => {
   const response = await instance.delete(`/api/workspaces/${workspaceId}`)
   return response?.data
 }
+
+export const xEmptyTrash = async (workspaceId = null) => {
+  const response = await instance.delete('/api/notes/trash', {
+    params: { workspace_id: workspaceId || undefined },
+  })
+  return response?.data
+}

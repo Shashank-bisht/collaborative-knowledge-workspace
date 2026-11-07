@@ -19,11 +19,11 @@ export const CoComponent = ({ inside, isSidebarOpen, setIsSidebarOpen }) => {
   return (
     <div className='flex flex-col gap-[30px] my-[30px]'>
       <div className='flex justify-between items-center px-[20px]'>
-        <div className='relative w-[90px]'>
+        <div className='relative w-[90px] rounded-lg p-1'>
           <img
             alt='test'
-            src='/logo.svg'
-            class='object-contain w-full cursor-pointer'
+            src='/logo.png'
+            class='object-contain w-full h-full cursor-pointer'
             onClick={() => {
               Navigate('/app')
               if (inside === 'mobile') {
@@ -104,11 +104,11 @@ export const MoHeader = ({ children }) => {
   return (
     <div className='lg:hidden block sticky top-0 w-full z-50 bg-background h-[60px]'>
       <div className='flex justify-between items-center relative h-full px-[20px]'>
-        <div className={`w-[90px] relative`}>
+        <div className={`w-[90px] relative rounded-lg p-1`}>
           <img
             alt='test'
-            src={'/logo.svg'}
-            className='object-contain w-full'
+            src={'/logo.png'}
+            className='object-contain w-full h-full'
             onClick={() => Navigate('/app')}
           />
         </div>

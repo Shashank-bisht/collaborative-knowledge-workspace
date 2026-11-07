@@ -33,17 +33,7 @@ const Trashs = () => {
         setIsActiveNote={setIsActiveNote}
         activeBlock={activeBlock}
       />
-      {isActiveNote ? (
-        <TrashMenu />
-      ) : (
-        <div className='lg:flex hidden flex-col gap-[10px] items-center justify-center w-[calc(100vw-650px)]'>
-          <img alt='icon' src={'/FileText.svg'} height={80} width={80} />
-          <h2 className='font-semibold text-[28px]'>Select note to restore</h2>
-          <p className='lg:w-[460px] text-center font-normal text-white/[60%]'>
-            Select a note from the list on the left for restoring note.
-          </p>
-        </div>
-      )}
+      <TrashMenu />
     </>
   )
 }

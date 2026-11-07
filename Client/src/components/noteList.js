@@ -17,6 +17,18 @@ function NoteList({
   activeBlock,
 }) {
   const [presenceMap, setPresenceMap] = useState({})
+  const [currentPage, setCurrentPage] = useState(1)
+  const PAGE_SIZE = 10
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [title, activeBlock, array?.length])
+
+  const totalPages = Math.max(1, Math.ceil((array?.length || 0) / PAGE_SIZE))
+  const pageItems = (array || []).slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  )
 
   useEffect(() => {
     const loadPresence = async () => {
@@ -51,7 +63,7 @@ function NoteList({
         </div>
       }
     >
-      {array?.map((item, i) => {
+      {pageItems?.map((item, i) => {
         const participants = presenceMap[item.note_id] || []
         const activeParticipant = participants[0]
 
@@ -105,6 +117,34 @@ function NoteList({
           </Card>
         )
       })}
+
+      {array?.length > 0 ? (
+        <div className='mt-4 flex items-center justify-between gap-2 border-t border-white/10 pt-4'>
+          <button
+            type='button'
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className='rounded-md border border-white/10 bg-white/[5%] px-3 py-1.5 text-sm text-white/80 disabled:cursor-not-allowed disabled:opacity-40'
+          >
+            Prev
+          </button>
+
+          <span className='text-xs text-white/60'>
+            {currentPage} / {totalPages}
+          </span>
+
+          <button
+            type='button'
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className='rounded-md border border-white/10 bg-white/[5%] px-3 py-1.5 text-sm text-white/80 disabled:cursor-not-allowed disabled:opacity-40'
+          >
+            Next
+          </button>
+        </div>
+      ) : null}
 
       {array?.length === 0 ? (
         <div className='h-[70vh] flex items-center justify-center flex-col gap-2'>

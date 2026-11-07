@@ -5,6 +5,7 @@ import {
   addNote,
   updateNote,
   deleteNote,
+  emptyTrash,
   getNotePresence,
   updateNotePresence,
   deleteNotePresence,
@@ -25,6 +26,7 @@ router.post('/:id/comments', addNoteComment)
 router.put('/:id', updateNote)
 router.put('/:id/presence', updateNotePresence)
 router.put('/comments/:commentId', updateNoteComment)
+router.delete('/trash', emptyTrash)
 router.delete('/:id', deleteNote)
 router.delete('/:id/presence', deleteNotePresence)
 router.delete('/comments/:commentId', deleteNoteComment)

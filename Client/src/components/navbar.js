@@ -72,11 +72,11 @@ export const Navbar = () => {
         ref={navRef}
       >
         <div className='flex justify-between items-center'>
-          <div className='relative h-[38px] w-[100px]'>
+          <div className='relative h-[38px] w-[100px] rounded-lg p-1'>
             <img
               alt='test'
-              src='/logo.svg'
-              className='object-contain w-full cursor-pointer'
+              src='/logo.png'
+              className='object-contain w-full h-full cursor-pointer'
               onClick={() => handleToNextRoute('/')}
             />
           </div>
@@ -117,7 +117,7 @@ export const Navbar = () => {
                 alt='test'
                 width={100}
                 height={38}
-                src={'/logo.svg'}
+                src={'/logo.png'}
                 onClick={() => handleToNextRoute('/')}
               />
             </div>

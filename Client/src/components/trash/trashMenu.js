@@ -9,7 +9,7 @@ import { IoChevronBackOutline } from 'react-icons/io5'
 import { useToast } from '../ui/use-toast'
 
 import { useGlobalContext } from '../../api/useGlobalContext'
-import { xUpdateNote, xDeleteNote } from '../../api/fetch'
+import { xUpdateNote, xDeleteNote, xEmptyTrash } from '../../api/fetch'
 
 function TrashMenu() {
   const isBigScreen = useMediaQuery({ minWidth: 1024 })
@@ -23,10 +23,14 @@ function TrashMenu() {
     isActiveNote,
     setIsActiveNote,
     setActiveBlock,
+    selectedWorkspaceId,
+    trash,
   } = useContext(useGlobalContext)
 
+  const hasTrashItems = (trash?.length || 0) > 0
+  const selectedNote = note && note.note_id ? note : null
   const [method, setMethod] = React.useState('restore')
-  const [open, setOpen] = React.useState(false)
+  const [dialogOpen, setDialogOpen] = React.useState(false)
 
   useEffect(() => {
     setActiveBlock('trash')
@@ -37,7 +41,7 @@ function TrashMenu() {
     setLoading(true)
     try {
       if (method === 'restore') {
-        await xUpdateNote(note?.note_id, {
+        await xUpdateNote(selectedNote?.note_id, {
           deleted: 0,
         })
         toast({
@@ -46,73 +50,102 @@ function TrashMenu() {
         })
       }
       if (method === 'delete') {
-        await xDeleteNote(note?.note_id)
+        await xDeleteNote(selectedNote?.note_id)
         toast({
           title: 'Note succesfully deleted',
+          variant: 'success',
+        })
+      }
+      if (method === 'empty_all') {
+        const result = await xEmptyTrash(selectedWorkspaceId)
+        toast({
+          title: result?.message || 'Trash cleared',
           variant: 'success',
         })
       }
       getNotes()
       setIsActiveNote(false)
       setNote({})
-      // Navigate()
+      setDialogOpen(false)
     } catch (err) {
       toast({
         title:
           method === 'restore'
             ? 'Failed to restore note'
-            : 'Failed to delete note',
+            : method === 'delete'
+            ? 'Failed to delete note'
+            : 'Failed to clear trash',
         description: 'Please try again later',
         variant: 'danger',
       })
     }
     setLoading(false)
     setMethod('restore')
-    setOpen(false)
+    setDialogOpen(false)
   }
+
+  const isTrashEmpty = !note || !note.note_id
 
   return (
     <>
-      {isActiveNote && (
-        <>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent>
-              <h2 className='text-xl'>
-                {method === 'restore' ? 'Restore' : 'Delete'} note !
-              </h2>
-              <Dvider />
-              <p>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <h2 className='text-xl'>
+            {method === 'restore'
+              ? 'Restore'
+              : method === 'delete'
+              ? 'Delete'
+              : 'Clear trash'}
+            {method === 'empty_all' ? '' : ' note'}!
+          </h2>
+          <Dvider />
+          <p>
+            {method === 'empty_all' ? (
+              <>
+                Are you sure you want to delete all notes in trash for this
+                workspace?
+              </>
+            ) : (
+              <>
                 Are you sure you want to{' '}
                 <span className='font-semibold'>
                   {method === 'restore' ? 'restore' : 'delete'}
                 </span>{' '}
                 this note ?
-              </p>
-              <DialogFooter>
-                <Button
-                  className='m-1'
-                  size={'sm'}
-                  variant={'secondary'}
-                  onClick={() => {
-                    setMethod('restore')
-                    setOpen(false)
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className='m-1'
-                  size={'sm'}
-                  variant={method === 'restore' ? 'default' : 'destructive'}
-                  onClick={() => handleNote()}
-                  isLoading={loading}
-                >
-                  {method === 'restore' ? 'Yes, move it' : 'Yes, delete it'}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </>
+            )}
+          </p>
+          <DialogFooter>
+            <Button
+              className='m-1'
+              size={'sm'}
+              variant={'secondary'}
+              onClick={() => {
+                setMethod('restore')
+                setDialogOpen(false)
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className='m-1'
+              size={'sm'}
+              variant={method === 'restore' ? 'default' : 'destructive'}
+              onClick={() => handleNote()}
+              isLoading={loading}
+            >
+              {method === 'restore'
+                ? 'Yes, move it'
+                : method === 'delete'
+                ? 'Yes, delete it'
+                : 'Yes, clear trash'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
+      {isActiveNote && selectedNote ? (
+        <>
           <div className='px-2 flex flex-col gap-[10px] items-center justify-center h-[calc(100vh-60px)] w-auto lg:w-[calc(100vw-650px)] lg:h-screen'>
             <img
               alt='icon'
@@ -122,7 +155,7 @@ function TrashMenu() {
               width={80}
             />
             <h2 className='font-semibold text-[28px] text-center'>
-              Restore "<span>{`${note.name}`}</span>"
+              Restore "<span>{`${selectedNote.name}`}</span>"
             </h2>
             <p className='lg:w-[460px] text-center font-normal text-white/[60%]'>
               Don't want to lose this note? It's not too late! Just click the
@@ -135,7 +168,7 @@ function TrashMenu() {
                 size={'lg'}
                 onClick={() => {
                   setMethod('restore')
-                  setOpen(true)
+                  setDialogOpen(true)
                 }}
                 isLoading={loading}
               >
@@ -148,7 +181,7 @@ function TrashMenu() {
                 variant={'destructive'}
                 onClick={() => {
                   setMethod('delete')
-                  setOpen(true)
+                  setDialogOpen(true)
                 }}
                 isLoading={loading}
               >
@@ -171,6 +204,33 @@ function TrashMenu() {
             </div>
           ) : null}
         </>
+      ) : (
+        <div className='px-2 flex flex-col gap-[10px] items-center justify-center h-[calc(100vh-60px)] w-auto lg:w-[calc(100vw-650px)] lg:h-screen'>
+          <img alt='icon' src={'/history.svg'} height={80} width={80} />
+          <h2 className='font-semibold text-[28px] text-center'>
+            {hasTrashItems ? 'No note selected' : 'Trash is empty'}
+          </h2>
+          <p className='lg:w-[460px] text-center font-normal text-white/[60%]'>
+            {hasTrashItems
+              ? 'Select a note from the left to restore or permanently delete it.'
+              : 'Deleted notes will appear here when you remove them from your workspace.'}
+          </p>
+
+          {hasTrashItems ? (
+            <Button
+              className='mt-3 text-[16px] font-semibold'
+              size={'lg'}
+              variant={'destructive'}
+              onClick={() => {
+                setMethod('empty_all')
+                setDialogOpen(true)
+              }}
+              isLoading={loading}
+            >
+              Empty trash
+            </Button>
+          ) : null}
+        </div>
       )}
     </>
   )
