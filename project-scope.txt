@@ -1,0 +1,42 @@
+SCOPE
+
+The scope of Writer is to develop a web-based collaborative knowledge workspace where individuals and teams can create, organize, manage, and share project information. The application brings together workspaces, folders, notes, collaboration tools, and access controls in one structured environment. Its main features include:
+
+1. User Registration and Authentication
+• Users can register, log in, and securely access their accounts.
+• Authentication and access controls protect users' accounts and workspace content.
+
+2. Workspaces and Team Management
+• Users can create workspaces to organize information for different teams or projects.
+• Workspace owners can invite members and manage their participation.
+• Workspace roles, such as owner, admin, editor, and viewer, define what members can access and do.
+
+3. Knowledge and Content Organization
+• Users can create folders and organize notes and documents within workspaces.
+• Users with appropriate permissions can create, edit, and manage shared content.
+• Users can mark notes as favorites and organize content through archive and trash features.
+• Deleted notes can be restored or permanently removed where supported.
+
+4. Search and Retrieval
+• Users can search for notes, folders, and workspaces to find relevant information.
+• Search supports locating content across available sections, including shared, archived, and trashed content where applicable.
+
+5. Sharing and Collaboration
+• Users can share notes and workspace content with other users using the application's sharing and permission controls.
+• Owners and workspace managers can control access, assign roles, and manage collaborators.
+• Users can bookmark shared content for quick reference.
+• Users can discuss notes through comments and threaded replies.
+• Presence indicators can show when users are viewing or editing shared content.
+
+OUT OF SCOPE
+
+The following functionalities and features are outside the scope of this project:
+
+• Mobile Applications: Developing dedicated applications for iOS or Android.
+• Simultaneous Collaborative Editing: Supporting multiple users editing the same note at the same time. Presence indicators provide activity awareness but do not provide simultaneous editing.
+• Offline Mode: Accessing or editing workspace content without an internet connection.
+
+ASSUMPTIONS
+
+• Users have basic internet connectivity and a modern web browser to access Writer.
+• Users have valid accounts and appropriate workspace permissions to access protected content.

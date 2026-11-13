@@ -1,0 +1,27 @@
+FUTURE ENHANCEMENTS
+
+Writer can be expanded over time to support evolving individual and team knowledge-work needs. Potential future enhancements include:
+
+1. Improved Knowledge Management
+• Add complete note version history with the ability to compare and restore earlier versions.
+• Introduce templates, richer formatting, and customizable workspace layouts.
+• Support exporting notes and workspace content to formats such as PDF and Markdown.
+
+2. Productivity and Integrations
+• Add tasks, reminders, and notifications for assignments, mentions, and replies.
+• Integrate with calendars, cloud storage, and other productivity tools.
+• Provide an activity feed and audit history to help teams follow changes across workspaces.
+
+3. Smarter Search and AI Assistance
+• Improve search with advanced filters and semantic matching across workspace content.
+• Explore AI-assisted summaries, content recommendations, and suggestions for organizing knowledge.
+
+4. Mobile Access and Offline Support
+• Develop mobile applications for iOS and Android to make workspace content easier to access on the go.
+• Consider secure offline access with synchronization when an internet connection is available.
+
+5. Security and Insights
+• Strengthen account protection with options such as two-factor authentication.
+• Expand workspace activity analytics to help teams understand how their knowledge resources are used.
+
+These enhancements are possibilities for future development and are not part of the current project scope.

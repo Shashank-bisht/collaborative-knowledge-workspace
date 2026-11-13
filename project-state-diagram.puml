@@ -1,0 +1,27 @@
+@startuml
+title Writer - Note Lifecycle
+
+[*] --> Active : Create note
+
+Active --> Archived : Archive
+Archived --> Active : Unarchive
+
+Active --> Trash : Move to trash
+Archived --> Trash : Move to trash
+
+Trash --> Active : Restore [previously active]
+Trash --> Archived : Restore [previously archived]
+
+Trash --> PermanentlyDeleted : Permanently delete
+PermanentlyDeleted --> [*]
+
+note right of Active
+  Lifecycle summary:
+  Notes can be active, archived,
+  or in the trash. Restoring a note
+  returns it to its previous active
+  or archived state. Permanent deletion
+  ends the lifecycle. Favorites are
+  independent of these states.
+end note
+@enduml
