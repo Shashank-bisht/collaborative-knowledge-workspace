@@ -1,0 +1,19 @@
+CATEGORY
+
+The Writer project can be categorized into several domains based on its functionalities, technologies, and overall purpose. It is primarily a modern web application designed to support collaboration, knowledge management, and secure digital workspaces.
+
+• Web Development: The project is built as a full-stack web application using modern frontend and backend technologies. It includes interactive interfaces, responsive design, API communication, and dynamic content rendering, making it a strong example of web development.
+
+• Relational Database Management System (RDBMS): The application stores user information, workspace data, folders, notes, permissions, comments, and collaboration records in a structured relational database. Technologies such as MySQL are used to manage and organize this data efficiently.
+
+• Security and Authentication: Since the application supports user registration, login, and access control, it incorporates authentication and authorization mechanisms to protect user data and ensure secure access to workspaces and content.
+
+• Knowledge Collaboration Platform: The project is designed as a collaborative digital workspace similar to modern productivity tools. It allows users to work together, share content, assign roles, and manage important information in a centralized environment.
+
+• Real-Time Collaboration Tools: The system includes live presence indicators, shared content updates, and collaborative access features, making it relevant to the category of real-time collaborative systems and online teamwork tools.
+
+• Content Management and Organization: The project facilitates the creation, storage, organization, and retrieval of notes and files. This places it within the domain of content management systems and structured knowledge organization.
+
+• User Experience and Interface Design: The application focuses on usability, accessibility, and an intuitive interface so that users can easily manage workspaces, notes, folders, search features, and collaborative activities.
+
+In summary, the Writer project belongs to multiple categories, including web development, database management, security, collaboration, content organization, and user experience design. Its combination of secure access, structured data handling, teamwork support, and knowledge management makes it a comprehensive and modern project in the field of web-based collaborative applications.

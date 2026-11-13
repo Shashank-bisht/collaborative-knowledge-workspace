@@ -1,0 +1,208 @@
+@startuml
+' =============================
+' ER Diagram
+' =============================
+
+title Writer Project - ER Diagram
+
+entity "users" as users {
+  * user_id : varchar <<PK>>
+  --
+  username : varchar <<UNIQUE>>
+  email : varchar <<UNIQUE>>
+  password : varchar
+  created_date : datetime
+}
+
+entity "folders" as folders {
+  * folder_id : varchar <<PK>>
+  --
+  name : varchar
+  created_date : datetime
+  user_id : varchar <<FK>>
+}
+
+entity "notes" as notes {
+  * note_id : varchar <<PK>>
+  --
+  name : varchar
+  content : text
+  version : bigint
+  created_date : datetime
+  deleted : boolean
+  favorite : boolean
+  archive : boolean
+  folder_id : varchar <<FK>>
+  user_id : varchar <<FK>>
+}
+
+entity "shares" as shares {
+  * share_id : varchar <<PK>>
+  --
+  note_id : varchar <<UNIQUE>> <<FK>>
+  user_id : varchar <<FK>>
+}
+
+entity "note_collaborators" as note_collaborators {
+  * share_id : varchar <<PK, FK>>
+  * user_id : varchar <<PK, FK>>
+  --
+  role : enum('viewer','editor')
+  created_at : datetime
+}
+
+entity "bookmarks" as bookmarks {
+  * bookmark_id : varchar <<PK>>
+  --
+  share_id : varchar <<FK>>
+  user_id : varchar <<FK>>
+}
+
+users ||--o{ folders : creates
+users ||--o{ notes : owns
+folders ||--o{ notes : contains
+notes ||--o| shares : can_be_shared
+users ||--o{ shares : creates
+shares ||--o{ note_collaborators : has
+users ||--o{ note_collaborators : participates_in
+shares ||--o{ bookmarks : bookmarked_as
+users ||--o{ bookmarks : saves
+
+' =============================
+' DFD Level 0
+' =============================
+
+newpage
+
+title Writer Project - DFD Level 0
+
+left to right direction
+skinparam linetype ortho
+
+actor User
+rectangle "Writer System" as System
+ database "User Data Store" as UserDB
+ database "Folder Data Store" as FolderDB
+ database "Note Data Store" as NoteDB
+ database "Share Data Store" as ShareDB
+ database "Bookmark Data Store" as BookmarkDB
+
+User -->|Register / Login / Manage Content| System
+System -->|User account data| UserDB
+System -->|Folder records| FolderDB
+System -->|Note records| NoteDB
+System -->|Share records| ShareDB
+System -->|Bookmark records| BookmarkDB
+User <--|View / Edit content| System
+
+' =============================
+' DFD Level 1
+' =============================
+
+newpage
+
+title Writer Project - DFD Level 1
+
+left to right direction
+skinparam linetype ortho
+
+actor User
+
+rectangle "1. Authentication\n& User Management" as P1
+rectangle "2. Folder\nManagement" as P2
+rectangle "3. Note\nManagement" as P3
+rectangle "4. Share\nManagement" as P4
+rectangle "5. Bookmark\nManagement" as P5
+
+database "Users" as D1
+database "Folders" as D2
+database "Notes" as D3
+database "Shares" as D4
+database "Note Collaborators" as D5
+database "Bookmarks" as D6
+
+User -->|Register / Login / Profile| P1
+P1 -->|User credentials and profile data| D1
+
+User -->|Create / Update / Delete folders| P2
+P2 -->|Folder data| D2
+
+User -->|Create / Edit / Archive / Delete notes| P3
+P3 -->|Note data| D3
+
+User -->|Create share / assign roles| P4
+P4 -->|Share and collaborator data| D4
+P4 -->|Role-based access info| D5
+
+User -->|Bookmark shared notes| P5
+P5 -->|Bookmark records| D6
+
+P3 -->|Shared note content| User
+P4 -->|Shared content access| User
+P5 -->|Bookmarked note updates| User
+
+' =============================
+' DFD Level 2
+' =============================
+
+newpage
+
+title Writer Project - DFD Level 2
+
+left to right direction
+skinparam linetype ortho
+
+actor User
+
+rectangle "2.1 Create / Manage Folder" as F1
+rectangle "2.2 Organize Notes in Folder" as F2
+
+rectangle "3.1 Create / Update Note" as N1
+rectangle "3.2 Archive / Favorite / Delete Note" as N2
+rectangle "3.3 Search / Filter Notes" as N3
+
+rectangle "4.1 Create Shared Link" as S1
+rectangle "4.2 Add Collaborators" as S2
+rectangle "4.3 Manage Permissions" as S3
+
+rectangle "5.1 Bookmark Shared Note" as B1
+rectangle "5.2 View Bookmarked Notes" as B2
+
+database "Folders" as D2
+database "Notes" as D3
+database "Shares" as D4
+database "Note Collaborators" as D5
+database "Bookmarks" as D6
+
+User --> F1
+User --> F2
+User --> N1
+User --> N2
+User --> N3
+User --> S1
+User --> S2
+User --> S3
+User --> B1
+User --> B2
+
+F1 --> D2
+F2 --> D2
+F2 --> D3
+
+N1 --> D3
+N2 --> D3
+N3 --> D3
+
+S1 --> D4
+S2 --> D4
+S2 --> D5
+S3 --> D4
+S3 --> D5
+
+B1 --> D6
+B2 --> D6
+
+D3 -->|Shared note content| User
+D4 -->|Link and access info| User
+D6 -->|Saved bookmarks| User
+@enduml

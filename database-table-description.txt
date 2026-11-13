@@ -1,0 +1,25 @@
+USERS
+• Stores all registered account details such as user ID, username, email, password, and account creation date.
+• Acts as the main identity table for authentication and user-specific actions across the application.
+
+FOLDERS
+• Stores user-created folders used to organize notes and related content.
+• Each folder is linked to a specific user, helping maintain a structured personal or workspace-based organization system.
+
+NOTES
+• Stores all note content including title, body, version, and status fields such as favorite, archive, and deleted.
+• Each note belongs to a user and a folder, making it the central content storage table of the application.
+
+SHARES
+• Stores information about notes that are shared with other users through shareable links.
+• Each share entry links a note to its owner and enables collaborative access to selected content.
+
+NOTE_COLLABORATORS
+• Stores the users who can access a shared note and their assigned role such as viewer or editor.
+• Helps manage collaboration permissions and control access to shared content without changing the note owner.
+
+BOOKMARKS
+• Stores bookmarked shared notes for users who want quick access to important content.
+• Acts as a personal reference list for frequently used shared notes and resources.
+
+Overall, these tables work together to support secure user management, structured content organization, collaboration, and efficient sharing within the application.

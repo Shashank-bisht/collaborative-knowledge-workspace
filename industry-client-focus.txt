@@ -1,0 +1,7 @@
+INDUSTRY / CLIENT FOCUS
+
+This project is designed mainly for educational and personal use rather than for industrial or client-based deployment. It functions as a multi-user web application that supports collaborative note-taking, knowledge sharing, and organized information management for learning and productivity.
+
+The purpose of the project is to provide a practical platform for students and developers to explore modern web development, database management, authentication, and real-time collaboration in a controlled environment. It focuses on understanding core concepts and implementing them effectively rather than addressing the demands of a large commercial or enterprise system.
+
+Therefore, this project is not intended for large-scale industrial use or direct client deployment. Instead, it serves as an academic and personal project that demonstrates real-world concepts in a simplified and educational manner.
