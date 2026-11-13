@@ -44,7 +44,10 @@ function Login() {
         NPprogress.done()
       }, 1000)
     } catch (err) {
-      setLoginMsg({ style: 'tomato', msg: err.response.data })
+      setLoginMsg({
+        style: 'tomato',
+        msg: err.response?.data || err.message || 'Unable to log in. Please try again.',
+      })
 
       setTimeout(() => {
         NPprogress.done()
