@@ -2,15 +2,25 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import { useGlobalContext } from '../../api/useGlobalContext'
 import { Button } from '../ui/button'
 
+const createSessionId = () => {
+  if (crypto?.randomUUID) return crypto.randomUUID()
+
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
+    const random = Math.random() * 16 | 0
+    const value = char === 'x' ? random : (random & 0x3) | 0x8
+    return value.toString(16)
+  })
+}
+
 const API = {
   async list(workspaceId) {
-    const res = await fetch(`http://localhost:9000/api/workspaces/${workspaceId}/members`, {
+    const res = await fetch(`/api/workspaces/${workspaceId}/members`, {
       credentials: 'include',
     })
     return res.ok ? res.json() : []
   },
   async add(workspaceId, user, role) {
-    const res = await fetch(`http://localhost:9000/api/workspaces/${workspaceId}/members`, {
+    const res = await fetch(`/api/workspaces/${workspaceId}/members`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -19,7 +29,7 @@ const API = {
     return res
   },
   async update(workspaceId, userId, role) {
-    const res = await fetch(`http://localhost:9000/api/workspaces/${workspaceId}/members/${userId}`, {
+    const res = await fetch(`/api/workspaces/${workspaceId}/members/${userId}`, {
       method: 'PUT',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -28,14 +38,14 @@ const API = {
     return res
   },
   async remove(workspaceId, userId) {
-    const res = await fetch(`http://localhost:9000/api/workspaces/${workspaceId}/members/${userId}`, {
+    const res = await fetch(`/api/workspaces/${workspaceId}/members/${userId}`, {
       method: 'DELETE',
       credentials: 'include',
     })
     return res
   },
   async presence(workspaceId, status, sessionId) {
-    const res = await fetch(`http://localhost:9000/api/workspaces/${workspaceId}/presence`, {
+    const res = await fetch(`/api/workspaces/${workspaceId}/presence`, {
       method: 'PUT',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -44,13 +54,13 @@ const API = {
     return res
   },
   async getPresence(workspaceId) {
-    const res = await fetch(`http://localhost:9000/api/workspaces/${workspaceId}/presence`, {
+    const res = await fetch(`/api/workspaces/${workspaceId}/presence`, {
       credentials: 'include',
     })
     return res.ok ? res.json() : []
   },
   async clearPresence(workspaceId, sessionId) {
-    await fetch(`http://localhost:9000/api/workspaces/${workspaceId}/presence`, {
+    await fetch(`/api/workspaces/${workspaceId}/presence`, {
       method: 'DELETE',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -88,26 +98,36 @@ function WorkspaceMembers() {
     if (!selectedWorkspaceId) return
 
     const asyncRefreshPresence = async () => {
-      const sessionId = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`
-      sessionIdRef.current = sessionId
-      await API.presence(selectedWorkspaceId, 'viewing', sessionId)
-      const data = await API.getPresence(selectedWorkspaceId)
-      setPresence(data)
+      try {
+        const sessionId = createSessionId()
+        sessionIdRef.current = sessionId
+        await API.presence(selectedWorkspaceId, 'viewing', sessionId)
+        const data = await API.getPresence(selectedWorkspaceId)
+        setPresence(Array.isArray(data) ? data : [])
+      } catch (error) {
+        setPresence([])
+      }
     }
 
     asyncRefreshPresence()
     const interval = setInterval(async () => {
       if (!selectedWorkspaceId || !sessionIdRef.current) return
-      await API.presence(selectedWorkspaceId, 'viewing', sessionIdRef.current)
-      const data = await API.getPresence(selectedWorkspaceId)
-      setPresence(data)
+
+      try {
+        await API.presence(selectedWorkspaceId, 'viewing', sessionIdRef.current)
+        const data = await API.getPresence(selectedWorkspaceId)
+        setPresence(Array.isArray(data) ? data : [])
+      } catch (error) {
+        setPresence([])
+      }
     }, 5000)
 
     return () => {
       clearInterval(interval)
       if (selectedWorkspaceId && sessionIdRef.current) {
-        API.clearPresence(selectedWorkspaceId, sessionIdRef.current)
+        API.clearPresence(selectedWorkspaceId, sessionIdRef.current).catch(() => {})
       }
+      sessionIdRef.current = null
     }
   }, [selectedWorkspaceId])
 

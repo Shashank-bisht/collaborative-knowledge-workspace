@@ -25,6 +25,16 @@ export const useSharedNoteEditing = (isEditable) => {
   return { isEditing, markEditing }
 }
 
+const createSessionId = () => {
+  if (crypto?.randomUUID) return crypto.randomUUID()
+
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
+    const random = Math.random() * 16 | 0
+    const value = char === 'x' ? random : (random & 0x3) | 0x8
+    return value.toString(16)
+  })
+}
+
 const SharedNotePresence = ({ shareId, status, participantsOverride = [] }) => {
   const [participants, setParticipants] = useState(participantsOverride)
   const [hasError, setHasError] = useState(false)
@@ -40,7 +50,7 @@ const SharedNotePresence = ({ shareId, status, participantsOverride = [] }) => {
 
     let isMounted = true
     let isRefreshing = false
-    const sessionId = uuidv4()
+    const sessionId = createSessionId()
 
     const refreshPresence = async () => {
       if (isRefreshing) return
@@ -54,8 +64,10 @@ const SharedNotePresence = ({ shareId, status, participantsOverride = [] }) => {
           setHasError(false)
         }
       } catch (error) {
-        console.error('Unable to refresh shared note presence.', error)
-        if (isMounted) setHasError(true)
+        if (isMounted) {
+          setParticipants([])
+          setHasError(true)
+        }
       } finally {
         isRefreshing = false
       }
@@ -67,9 +79,7 @@ const SharedNotePresence = ({ shareId, status, participantsOverride = [] }) => {
     return () => {
       isMounted = false
       window.clearInterval(interval)
-      xDeleteSharePresence(shareId, sessionId).catch((error) => {
-        console.error('Unable to remove shared note presence.', error)
-      })
+      xDeleteSharePresence(shareId, sessionId).catch(() => {})
     }
   }, [shareId])
 
